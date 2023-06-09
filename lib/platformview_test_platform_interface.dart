@@ -10,10 +10,18 @@ class Location {
 
   final double latitude;
   final double longitude;
+
+  bool operator ==(Object other) {
+    return other is Location &&
+        latitude == other.latitude &&
+        longitude == other.longitude;
+  }
+
+  int get hashCode => Object.hash(latitude, longitude);
 }
 
 class CoordinateRegion {
-  CoordinateRegion({
+  const CoordinateRegion({
     required this.center,
     required this.latitudinalMeters,
     required this.longitudinalMeters,
@@ -22,6 +30,15 @@ class CoordinateRegion {
   final Location center;
   final double latitudinalMeters;
   final double longitudinalMeters;
+
+  bool operator ==(Object other) {
+    return other is CoordinateRegion &&
+        center == other.center &&
+        latitudinalMeters == other.latitudinalMeters &&
+        longitudinalMeters == other.longitudinalMeters;
+  }
+
+  int get hashCode => Object.hash(center, latitudinalMeters, longitudinalMeters);
 }
 
 abstract class MapViewPlatform extends PlatformInterface {
@@ -49,7 +66,8 @@ abstract class MapViewPlatform extends PlatformInterface {
     throw UnimplementedError('init() not implemented');
   }
 
-  Future<void> setRegion(int mapId, CoordinateRegion region, {bool animated = false}) {
+  Future<void> setRegion(int mapId, CoordinateRegion region,
+      {bool animated = false}) {
     throw UnimplementedError('setMapLocation() not implemented');
   }
 }

@@ -42,6 +42,8 @@ class MapView: NSView {
         })
 
         mapView = MKMapView(frame: CGRect(x: 0, y: 0, width: 300, height: 300))
+        // TODO(cbracken): parse creation params.
+        //mapView!.setRegion(region, animated: false)
         super.addSubview(mapView!)
         NSLayoutConstraint.activate([
             mapView!.leadingAnchor.constraint(equalTo: self.leadingAnchor),
