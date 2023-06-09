@@ -23,50 +23,7 @@ class MapViewFactory: NSObject, FlutterPlatformViewFactory {
 }
 
 class MapView: NSView {
-    // Hacked in hardcoded locations - extract location setting as methods and move to Dart.
-    let regions = [
-        // Kyoto Gosho zoomed out.
-        MKCoordinateRegion(
-          center: CLLocation(latitude: 35.02517, longitude: 135.76354).coordinate,
-          latitudinalMeters: 1000000,
-          longitudinalMeters: 1000000),
-        // Kyoto Gosho zoomed in.
-        MKCoordinateRegion(
-          center: CLLocation(latitude: 35.02517, longitude: 135.76354).coordinate,
-          latitudinalMeters: 10000,
-          longitudinalMeters: 10000),
-        // Kyoto Gosho more zoomed in.
-        MKCoordinateRegion(
-          center: CLLocation(latitude: 35.02517, longitude: 135.76354).coordinate,
-          latitudinalMeters: 1000,
-          longitudinalMeters: 1000),
-        // Kyoto Gosho zoomed out.
-        MKCoordinateRegion(
-          center: CLLocation(latitude: 34.98538, longitude: 135.76320).coordinate,
-          latitudinalMeters: 10000,
-          longitudinalMeters: 10000),
-        // Osaka-jou zoomed out.
-        MKCoordinateRegion(
-          center: CLLocation(latitude: 34.687602115847326, longitude: 135.5263715730193).coordinate,
-          latitudinalMeters: 10000,
-          longitudinalMeters: 10000),
-        // Osaka-jou zoomed out.
-        MKCoordinateRegion(
-          center: CLLocation(latitude: 34.687602115847326, longitude: 135.5263715730193).coordinate,
-          latitudinalMeters: 3000,
-          longitudinalMeters: 3000),
-        // Osaka-jou zoomed out.
-        MKCoordinateRegion(
-          center: CLLocation(latitude: 34.687602115847326, longitude: 135.5263715730193).coordinate,
-          latitudinalMeters: 10000,
-          longitudinalMeters: 10000),
-        // Osaka-jou zoomed out.
-        MKCoordinateRegion(
-          center: CLLocation(latitude: 34.687602115847326, longitude: 135.5263715730193).coordinate,
-          latitudinalMeters: 100000,
-          longitudinalMeters: 100000),
-    ]
-    var region = 0;
+    var mapView: MKMapView?
 
     init(
         frame: CGRect,
@@ -78,17 +35,17 @@ class MapView: NSView {
         super.wantsLayer = true
         super.frame = CGRect(x: 0, y: 0, width: 200, height: 200)
 
-        let mapView = MKMapView(frame: CGRect(x: 0, y: 0, width: 300, height: 300))
-        let initialLoc = CLLocation(latitude: 34.98538, longitude: 135.76320)
-        mapView.setRegion(regions[0], animated: false)
-        super.addSubview(mapView)
-        let timer = Timer.scheduledTimer(withTimeInterval: 3.0, repeats: true) { _ in
-            self.region = (self.region + 1) % self.regions.count
-            mapView.setRegion(self.regions[self.region], animated: true)
-        }
+        let channelName = "bracken.jp/mapview_macos_\(viewId)"
+        let channel = FlutterMethodChannel(name: channelName, binaryMessenger: messenger!)
+        channel.setMethodCallHandler({[weak self] (call: FlutterMethodCall, result: @escaping FlutterResult) in
+          self?.handle(call, result: result)
+        })
+
+        mapView = MKMapView(frame: CGRect(x: 0, y: 0, width: 300, height: 300))
+        super.addSubview(mapView!)
         NSLayoutConstraint.activate([
-            mapView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
-            mapView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
+            mapView!.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+            mapView!.trailingAnchor.constraint(equalTo: self.trailingAnchor),
         ])
     }
 
@@ -96,23 +53,35 @@ class MapView: NSView {
         super.init(coder: coder)
         super.wantsLayer = true
         super.frame = CGRect(x: 0, y: 0, width: 200, height: 200)
+        mapView = nil
     }
+
+  public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
+    switch call.method {
+    case "setRegion":
+      let args = call.arguments as! [String:Any]
+      handleSetRegion(args)
+    default:
+      result(FlutterMethodNotImplemented)
+    }
+  }
+
+  public func handleSetRegion(_ args: [String:Any]) {
+    let centerArg = args["center"] as! [String:Double]
+    let region = MKCoordinateRegion(
+      center: CLLocation(
+        latitude: centerArg["latitude"]!,
+        longitude: centerArg["longitude"]!).coordinate,
+      latitudinalMeters: args["latitudinalMeters"] as! Double,
+      longitudinalMeters: args["longitudinalMeters"] as! Double)
+    let animated = args["animated"] as! Bool
+    mapView?.setRegion(region, animated: animated)
+  }
 }
 
 public class PlatformViewTestPlugin: NSObject, FlutterPlugin {
   public static func register(with registrar: FlutterPluginRegistrar) {
-    let channel = FlutterMethodChannel(name: "platformview_test", binaryMessenger: registrar.messenger)
-    let instance = PlatformViewTestPlugin()
-    registrar.addMethodCallDelegate(instance, channel: channel)
-
     let factory = MapViewFactory(messenger: registrar.messenger)
     registrar.register(factory, withId: "@views/mapview-view-type")
-  }
-
-  public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
-    switch call.method {
-    default:
-      result(FlutterMethodNotImplemented)
-    }
   }
 }

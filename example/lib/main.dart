@@ -21,7 +21,6 @@ class _MyAppState extends State<MyApp> with TickerProviderStateMixin {
   late AnimationController tweenController;
   late AnimationController rotationController;
   late Animation<double> rotation;
-  final _platformViewTestPlugin = PlatformViewTest();
 
   double opacity = 1.0;
   double radius = 30;
@@ -29,6 +28,51 @@ class _MyAppState extends State<MyApp> with TickerProviderStateMixin {
   double angle = 0;
   double textAngle = 0;
   bool forward = true;
+
+    // Hacked in hardcoded locations - extract location setting as methods and move to Dart.
+  List<CoordinateRegion> _regions = <CoordinateRegion>[
+    // Kyoto Gosho zoomed out.
+    CoordinateRegion(
+      center: Location(latitude: 35.02517, longitude: 135.76354),
+      latitudinalMeters: 1000000,
+      longitudinalMeters: 1000000),
+    // Kyoto Gosho zoomed in.
+    CoordinateRegion(
+      center: Location(latitude: 35.02517, longitude: 135.76354),
+      latitudinalMeters: 10000,
+      longitudinalMeters: 10000),
+    // Kyoto Gosho more zoomed in.
+    CoordinateRegion(
+      center: Location(latitude: 35.02517, longitude: 135.76354),
+      latitudinalMeters: 1000,
+      longitudinalMeters: 1000),
+    // Kyoto Gosho zoomed out.
+    CoordinateRegion(
+      center: Location(latitude: 34.98538, longitude: 135.76320),
+      latitudinalMeters: 10000,
+      longitudinalMeters: 10000),
+    // Osaka-jou zoomed out.
+    CoordinateRegion(
+      center: Location(latitude: 34.687602115847326, longitude: 135.5263715730193),
+      latitudinalMeters: 10000,
+      longitudinalMeters: 10000),
+    // Osaka-jou zoomed out.
+    CoordinateRegion(
+      center: Location(latitude: 34.687602115847326, longitude: 135.5263715730193),
+      latitudinalMeters: 3000,
+      longitudinalMeters: 3000),
+    // Osaka-jou zoomed out.
+    CoordinateRegion(
+      center: Location(latitude: 34.687602115847326, longitude: 135.5263715730193),
+      latitudinalMeters: 10000,
+      longitudinalMeters: 10000),
+    // Osaka-jou zoomed out.
+    CoordinateRegion(
+      center: Location(latitude: 34.687602115847326, longitude: 135.5263715730193),
+      latitudinalMeters: 100000,
+      longitudinalMeters: 100000),
+  ];
+  int _region = 0;
 
   @override
   void initState() {
@@ -46,12 +90,17 @@ class _MyAppState extends State<MyApp> with TickerProviderStateMixin {
         });
       });
     tweenController.repeat();
+    Timer.periodic(const Duration(seconds: 3), (Timer _) {
+      _region = (_region + 1) % _regions.length;
+      MapView.setRegion(_regions[_region], animated: true);
+    });
   }
+
+  DeformableNativeView? nativeView;
 
   @override
   Widget build(BuildContext context) {
     final Widget version = Text('');
-
     return MaterialApp(
       home: Scaffold(
         body: Center(

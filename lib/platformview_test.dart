@@ -3,15 +3,18 @@ import 'platformview_test_platform_interface.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
-class PlatformViewTest {
-  Future<void> setMapLocation(double latitude, double longitude) {
-    return PlatformViewTestPlatform.instance.setMapLocation(latitude, longitude);
-  }
-}
+export 'platformview_test_platform_interface.dart' show Location, CoordinateRegion;
 
 class MapView extends StatelessWidget {
   const MapView({Key? key}) : super(key: key);
+
+  // TODO(cbracken): Eliminate hardcoding.
+  static final int _mapId = 0;
+
+  // TODO(cbracken): Make this non-static.
+  static Future<void> setRegion(CoordinateRegion region, {bool animated = false}) {
+    return MapViewPlatform.instance.setRegion(_mapId, region, animated: animated);
+  }
 
   @override
   Widget build(BuildContext context) {
