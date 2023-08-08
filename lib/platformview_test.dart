@@ -1,4 +1,3 @@
-
 import 'platformview_test_platform_interface.dart';
 
 import 'package:flutter/material.dart';
@@ -28,6 +27,7 @@ class _MapViewState extends State<MapView> {
 
   @override
   void didUpdateWidget(MapView oldWidget) {
+    super.didUpdateWidget(oldWidget);
     if (oldWidget.region == widget.region) {
       return;
     }
