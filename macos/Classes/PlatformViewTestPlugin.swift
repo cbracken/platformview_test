@@ -23,7 +23,8 @@ class MapViewFactory: NSObject, FlutterPlatformViewFactory {
 }
 
 class MapView: NSView {
-    var mapView: MKMapView?
+    var topLabel: NSTextField?
+    var bottomLabel: NSTextField?
 
     init(
         frame: CGRect,
@@ -41,43 +42,35 @@ class MapView: NSView {
           self?.handle(call, result: result)
         })
 
-        mapView = MKMapView(frame: CGRect(x: 0, y: 0, width: 300, height: 300))
-        // TODO(cbracken): parse creation params.
-        //mapView!.setRegion(region, animated: false)
-        super.addSubview(mapView!)
-        NSLayoutConstraint.activate([
-            mapView!.leadingAnchor.constraint(equalTo: self.leadingAnchor),
-            mapView!.trailingAnchor.constraint(equalTo: self.trailingAnchor),
-        ])
+        topLabel = NSTextField()
+        topLabel?.frame = CGRect(origin: .zero, size: CGSize(width: 100, height: 44))
+        topLabel?.stringValue = "Top AppKit label"
+        topLabel?.isEditable = false
+        topLabel?.sizeToFit()
+
+        bottomLabel = NSTextField()
+        bottomLabel?.frame = CGRect(origin: CGPoint(x: 0, y: 50), size: CGSize(width: 100, height: 44))
+        bottomLabel?.stringValue = "Bottom AppKit label"
+        bottomLabel?.isEditable = false
+        bottomLabel?.sizeToFit()
+
+        super.addSubview(topLabel!)
+        super.addSubview(bottomLabel!)
     }
 
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         super.wantsLayer = true
         super.frame = CGRect(x: 0, y: 0, width: 200, height: 200)
-        mapView = nil
+        topLabel = nil
+        bottomLabel = nil
     }
 
   public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
     switch call.method {
-    case "setRegion":
-      let args = call.arguments as! [String:Any]
-      handleSetRegion(args)
     default:
       result(FlutterMethodNotImplemented)
     }
-  }
-
-  public func handleSetRegion(_ args: [String:Any]) {
-    let centerArg = args["center"] as! [String:Double]
-    let region = MKCoordinateRegion(
-      center: CLLocation(
-        latitude: centerArg["latitude"]!,
-        longitude: centerArg["longitude"]!).coordinate,
-      latitudinalMeters: args["latitudinalMeters"] as! Double,
-      longitudinalMeters: args["longitudinalMeters"] as! Double)
-    let animated = args["animated"] as! Bool
-    mapView?.setRegion(region, animated: animated)
   }
 }
 
