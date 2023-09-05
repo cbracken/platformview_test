@@ -11,12 +11,14 @@ class Location {
   final double latitude;
   final double longitude;
 
+  @override
   bool operator ==(Object other) {
     return other is Location &&
         latitude == other.latitude &&
         longitude == other.longitude;
   }
 
+  @override
   int get hashCode => Object.hash(latitude, longitude);
 }
 
@@ -31,6 +33,7 @@ class CoordinateRegion {
   final double latitudinalMeters;
   final double longitudinalMeters;
 
+  @override
   bool operator ==(Object other) {
     return other is CoordinateRegion &&
         center == other.center &&
@@ -38,6 +41,7 @@ class CoordinateRegion {
         longitudinalMeters == other.longitudinalMeters;
   }
 
+  @override
   int get hashCode => Object.hash(center, latitudinalMeters, longitudinalMeters);
 }
 
