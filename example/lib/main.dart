@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:math' as math;
 
-import 'package:flutter/services.dart';
 import 'package:platformview_test/platformview_test.dart';
+
+import 'src/deformable_native_view.dart';
 
 void main() {
   runApp(const MyApp());
@@ -121,7 +122,7 @@ class _MyAppState extends State<MyApp> with TickerProviderStateMixin {
                     opacity: opacity,
                     radius: radius,
                     scale: scale,
-                    region: _regions[_region],
+                    child: MapView(region: _regions[_region]),
                   ),
                   Transform.rotate(angle: -textAngle, child: Opacity(
                     opacity: 0.75,
