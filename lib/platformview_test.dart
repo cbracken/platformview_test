@@ -4,9 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 export 'platformview_test_platform_interface.dart' show Location, CoordinateRegion;
 
-// Unique identifier for each map widget.
-int _nextMapCreationId = 0;
-
 class MapView extends StatefulWidget {
   const MapView({required this.region, Key? key}) : super(key: key);
 
@@ -17,6 +14,9 @@ class MapView extends StatefulWidget {
 }
 
 class _MapViewState extends State<MapView> {
+  // Unique identifier for each map widget.
+  static int _nextMapCreationId = 0;
+
   final int _mapId = _nextMapCreationId++;
 
   @override
