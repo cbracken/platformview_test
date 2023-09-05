@@ -42,7 +42,7 @@ class _MapViewState extends State<MapView> {
     // Pass parameters to the platform side.
     final Map<String, dynamic> creationParams = <String, dynamic>{};
 
-    return UiKitView(
+    return AppKitView(
       viewType: viewType,
       layoutDirection: TextDirection.ltr,
       creationParams: creationParams,
