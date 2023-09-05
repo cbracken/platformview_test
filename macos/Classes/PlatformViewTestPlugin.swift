@@ -20,6 +20,15 @@ class MapViewFactory: NSObject, FlutterPlatformViewFactory {
             arguments: args,
             binaryMessenger: messenger)
     }
+
+    // Returns the FlutterMessageCodec used to decode any creation arguments passed via
+    // the AppKitView creationParams constructor argument.
+    //
+    // This method is optional, but if left unimplemented, the `arguments` argument to the create
+    // method above will be nil.
+    func createArgsCodec() -> (FlutterMessageCodec & NSObjectProtocol)? {
+      return FlutterStandardMessageCodec.sharedInstance()
+    }
 }
 
 class MapView: NSView {
@@ -42,8 +51,11 @@ class MapView: NSView {
         })
 
         mapView = MKMapView(frame: CGRect(x: 0, y: 0, width: 300, height: 300))
-        // TODO(cbracken): parse creation params.
-        //mapView!.setRegion(region, animated: false)
+
+        if var arguments = args as? [String:Any] {
+          arguments["animated"] = false
+          handleSetRegion(arguments)
+        }
         super.addSubview(mapView!)
         NSLayoutConstraint.activate([
             mapView!.leadingAnchor.constraint(equalTo: self.leadingAnchor),

@@ -66,12 +66,8 @@ abstract class MapViewPlatform extends PlatformInterface {
     _instance = instance;
   }
 
-  Future<void> init(int mapId) {
-    throw UnimplementedError('init() not implemented');
-  }
-
   Future<void> setRegion(int mapId, CoordinateRegion region,
       {bool animated = false}) {
-    throw UnimplementedError('setMapLocation() not implemented');
+    throw UnimplementedError('setRegion() not implemented');
   }
 }

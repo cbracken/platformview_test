@@ -7,13 +7,7 @@ class MethodChannelMapView extends MapViewPlatform {
   final Map<int, MethodChannel> _channels = <int, MethodChannel>{};
 
   @override
-  Future<void> init(int mapId) async {
-    _ensureChannelInitialized(mapId);
-  }
-
-  @override
   Future<void> setRegion(int mapId, CoordinateRegion region, {bool animated = false}) async {
-    // TODO(cbracken): Ensure all maps call init, then use _channels[mapId].
     MethodChannel channel = _ensureChannelInitialized(mapId);
     await channel.invokeMethod<String>('setRegion', <String, dynamic>{
       'center': <String, dynamic>{

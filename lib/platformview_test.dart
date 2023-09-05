@@ -22,7 +22,6 @@ class _MapViewState extends State<MapView> {
   @override
   void initState() {
     super.initState();
-    // MapViewPlatform.instance.setRegion(_mapId, widget.region, animated: true);
   }
 
   @override
@@ -40,7 +39,14 @@ class _MapViewState extends State<MapView> {
     const String viewType = '@views/mapview-view-type';
 
     // Pass parameters to the platform side.
-    final Map<String, dynamic> creationParams = <String, dynamic>{};
+    final Map<String, dynamic> creationParams = <String, dynamic>{
+      'center': <String, dynamic>{
+        'latitude': widget.region.center.latitude,
+        'longitude': widget.region.center.longitude,
+      },
+      'latitudinalMeters': widget.region.latitudinalMeters,
+      'longitudinalMeters': widget.region.longitudinalMeters,
+    };
 
     return AppKitView(
       viewType: viewType,
