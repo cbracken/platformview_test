@@ -30,7 +30,7 @@ class _MyAppState extends State<MyApp> with TickerProviderStateMixin {
   bool forward = true;
 
     // Hacked in hardcoded locations - extract location setting as methods and move to Dart.
-  List<CoordinateRegion> _regions = const <CoordinateRegion>[
+  final List<CoordinateRegion> _regions = const <CoordinateRegion>[
     // Kyoto Gosho zoomed out.
     CoordinateRegion(
       center: Location(latitude: 35.02517, longitude: 135.76354),
