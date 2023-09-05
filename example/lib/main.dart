@@ -100,7 +100,6 @@ class _MyAppState extends State<MyApp> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    final Widget version = Text('');
     return MaterialApp(
       home: Scaffold(
         body: Center(
@@ -108,7 +107,7 @@ class _MyAppState extends State<MyApp> with TickerProviderStateMixin {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              version,
+              Text('Apple Maps platform view sandwiched between Flutter widgets'),
               Stack(
                 alignment: Alignment.center,
                 children: <Widget>[
